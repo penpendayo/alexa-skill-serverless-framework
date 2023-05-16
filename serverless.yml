@@ -1,0 +1,78 @@
+service: ask-serverless
+
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-webpack
+  - serverless-alexa-skills
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+custom:
+  alexa:
+    # Step 1: Run `sls alexa auth` to authenticate
+    # Step 2: Run `sls alexa create --name "Serverless Alexa Typescript" --locale en-GB --type custom` to create a new skill
+    skills:
+      # Step 3: Paste the skill id returned by the create command here:
+      - id: ${env:AMAZON_SKILL_ID}
+        manifest:
+          publishingInformation:
+            locales:
+              ja-JP:
+                name: 家族の起床就寝通知
+          apis:
+            custom:
+              endpoint:
+                # Step 4: Do your first deploy of your Serverless stack
+                # Step 5: Paste the ARN of your lambda here:
+                uri: ${env:LAMBDA_ARN}
+                # Step 6: Run `sls alexa update` to deploy the skill manifest
+                # Step 7: Run `sls alexa build` to build the skill interaction model
+                # Step 8: Enable the skill in the Alexa app to start testing.
+          manifestVersion: '1.0'
+        models:
+          ja-JP:
+            interactionModel:
+              languageModel:
+                invocationName: 家族の起床就寝通知
+                intents:
+                  - name: AMAZON.StopIntent
+                    samples: []
+                  - name: OrderElectSwitch
+                    slots:
+                    - name: action
+                      type: ACTION
+                    - name: human
+                      type: HUMAN
+                    samples:
+                    - "{human} が {action} "
+                types:
+                - name: HUMAN
+                  values:
+                    - name:
+                        value: しんご
+                    - name:
+                        value: かなこ
+                - name: ACTION
+                  values:
+                    - name:
+                        value: 起床
+                    - name:
+                        value: 就寝
+
+functions:
+  alexa:
+    handler: handler.alexa
+    events:
+      - alexaSkill: ${self:custom.alexa.skills.0.id}
+    environment:
+      CHANNEL_ACCESS_TOKEN: ${env:CHANNEL_ACCESS_TOKEN}
+      CHANNEL_SECRET: ${env:CHANNEL_SECRET}
+      LINE_GROUP_ID: ${env:LINE_GROUP_ID}
+useDotenv: true
