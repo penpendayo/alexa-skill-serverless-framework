@@ -33,7 +33,7 @@ const createResponseMessage = (slots: Intent["slots"]) => {
   const human = slots.human.value as "かなこ" | "しんご";
   const action = slots.action.value as "起床" | "就寝";
   const emoji = action === "起床" ? "🌞" : "💤";
-  const message = `${emoji}:${human}が${action}したようです`;
+  const message = `${emoji}:${human}${action}`;
   return message;
 };
 
