@@ -75,4 +75,5 @@ functions:
       CHANNEL_ACCESS_TOKEN: ${env:CHANNEL_ACCESS_TOKEN}
       CHANNEL_SECRET: ${env:CHANNEL_SECRET}
       LINE_GROUP_ID: ${env:LINE_GROUP_ID}
+      DISCORD_WEBHOOK: ${env:DISCORD_WEBHOOK}
 useDotenv: true
